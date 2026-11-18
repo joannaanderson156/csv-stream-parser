@@ -48,3 +48,10 @@ Synchronously parses a string and returns an array of rows. Uses the same parser
 - A CRLF pair ends a row, and a lone CR also ends a row.
 - A file without a trailing newline still yields its final row.
 - An unterminated quoted field at end of input is treated as a normal field value rather than an error. Real-world CSV sometimes truncates, and failing the whole stream on the last byte is rarely what you want.
+
+## Performance
+
+The window keeps a bounded buffer, so `push` is constant time and memory does not
+grow with the length of the stream. `peak` and `trough` are linear in the window
+size, which is the trade that keeps `push` cheap.
+
